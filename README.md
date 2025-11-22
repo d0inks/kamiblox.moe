@@ -4,6 +4,7 @@ trying to write a movement script for matcha vm while trying to learn lua at the
 
 
 features to be inplemented:
+
 velocity indicator✅(trying to get colors working)
 
 velocity graph❌
