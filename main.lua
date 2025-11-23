@@ -1,5 +1,6 @@
 --BHOP is not possible until i find a work around just use velocity--
 --havent done jb yet--
+--https://discord.gg/BxAWmtP7cp--
 local CFG = {
     EB = 0x06; --mb5
     ps = 0x05; --mb4
