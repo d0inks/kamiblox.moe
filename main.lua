@@ -1,1 +1,124 @@
-local v0=false;local v1=false;local v2=false;local v3=true;local v4=game:GetService("Players");local v5=v4.LocalPlayer.Character;local v6=v5:WaitForChild("HumanoidRootPart");local v7=Color3.new(1,1,1);local v8=Vector2.new(950,720);local v9=Color3.new(0,255,0);local v10=Color3.new(255,0,0);local v11=Color3.new(250,137,0);local v12=Drawing.new("Text");v12.Visible=true;v12.Position=v8;v12.Color=v7;local v16=Drawing.new("Text");v16.Position=Vector2.new(960,750);v16.Text="EB";v16.Color=v7;v16.Visible=false;local v21=Drawing.new("Text");v21.Position=Vector2.new(945,750);v21.Text="JB";v21.Color=v7;v21.Visible=false;local v26=Drawing.new("Text");v26.Position=Vector2.new(980,750);v26.Text="PS";v26.Color=v7;v26.Visible=false;print("moon.lua by doink :)");print("discord server -- https://discord.gg/BxAWmtP7cp");local function v31() local v32=0;local v33=v6.AssemblyLinearVelocity;local v34=math.abs(v33.X^2 );local v35=math.abs(v33.Y^2 );local v36=math.abs(v33.Z^2 );local v37=math.sqrt(v34 + v35 + v36 );local v38=string.format("%.2f",v37);v12.Text=v38;if ((v37>v32) and (v37>1)) then v12.Color=v9;elseif ((v37<v32) and (v37>1)) then v12.Color=v11;elseif (v37<1) then v12.Color=v7;end v32=v37;end while true do local v40=iskeypressed(CFG.EB);local v41=iskeypressed(CFG.JB);local v42=iskeypressed(CFG.ps);if (iskeypressed(32) and v3) then if v5 then keypress(32);task.wait();end end if v40 then if (v5 and  not v0) then v16.Visible=true;v0=true;local v49=v6.AssemblyLinearVelocity;for v57=1,5 do wait();v6.AssemblyLinearVelocity=Vector3.new(v49.X * 1.25 ,v49.Y * 0 ,v49.Z * 1.3 ) -Vector3.new(0,18,0) ;end wait();v6.AssemblyLinearVelocity=Vector3.new(v6.AssemblyLinearVelocity.X * 1.8 ,v6.AssemblyLinearVelocity.Y * 1 ,v6.AssemblyLinearVelocity.Z * 2 );spawn(function() wait(0.1);v0=false;v16.Visible=false;end);end end if v41 then if (v5 and  not v1) then v21.Visible=true;v1=true;end else v1=false;v21.Visible=false;end if v42 then if (v5 and  not v2) then local v52=v6.AssemblyLinearVelocity;local v53=math.abs(v52.X);local v54=math.abs(v52.Z);v2=true;v26.Visible=true;if (v53<v54) then for v61=1,50 do v6.AssemblyLinearVelocity=Vector3.new(0,0,v52.Z * 1.5 );task.wait();end elseif (v53>v54) then for v63=1,50 do v6.AssemblyLinearVelocity=Vector3.new(v52.X * 1.5 ,0,0);task.wait();end end wait();v6.AssemblyLinearVelocity=Vector3.new(v6.AssemblyLinearVelocity.X * 1 ,v6.AssemblyLinearVelocity.Y * 1 ,v6.AssemblyLinearVelocity.Z * 2 );end else v2=false;v26.Visible=false;v6.AssemblyLinearVelocity=Vector3.new(v6.AssemblyLinearVelocity.X * 1 ,v6.AssemblyLinearVelocity.Y * 1 ,v6.AssemblyLinearVelocity.Z * 1 );end v31();wait(0.0001);end
+local edging = false
+local jbing = false
+local psing = false
+local bhop = true --set to false when doing gui - doink
+local playerS = game:GetService("Players")
+local player = playerS.LocalPlayer.Character
+local hrp = player:WaitForChild("HumanoidRootPart")
+local white = Color3.new(1, 1, 1) --white
+local pos = Vector2.new(950, 720)--txt pos
+local txtcolor2 = Color3.new(0,255,0)--green
+local txtcolor3 = Color3.new(255,0,0) --red
+local txtcolor4 = Color3.new(250, 137, 0) --orange
+
+local velo = Drawing.new("Text")
+velo.Visible = true
+velo.Position = pos
+velo.Color = white
+
+local ebTxt = Drawing.new("Text")
+ebTxt.Position = Vector2.new(960, 750)
+ebTxt.Text = "EB"
+ebTxt.Color = white
+ebTxt.Visible = false
+
+local JBTxt = Drawing.new("Text")
+JBTxt.Position = Vector2.new(945, 750)
+JBTxt.Text = "JB"
+JBTxt.Color = white
+JBTxt.Visible = false
+
+local PsTxt = Drawing.new("Text")
+PsTxt.Position = Vector2.new(980, 750)
+PsTxt.Text = "PS"
+PsTxt.Color = white
+PsTxt.Visible = false
+print("moon.lua by doink :)")
+print("discord server -- https://discord.gg/BxAWmtP7cp")
+--loop--
+local function velocity()
+	local pre = 0
+    local speed = hrp.AssemblyLinearVelocity
+    local bx = math.abs(speed.X^2)
+    local by = math.abs(speed.Y^2)
+    local bz = math.abs(speed.Z^2)
+    local totalVel = math.sqrt(bx + by + bz) --calcs total velocity
+    local toVel = string.format("%.2f", totalVel)
+    velo.Text = toVel
+if totalVel > pre and totalVel > 1 then
+	velo.Color = txtcolor2
+elseif totalVel < pre and totalVel > 1 then
+	velo.Color = txtcolor4
+elseif totalVel < 1 then
+	velo.Color = white
+	end
+	pre = totalVel
+end
+while true do
+    local EBpressed = iskeypressed(CFG.EB)
+    local JBpressed = iskeypressed(CFG.JB)
+    local Pspressed = iskeypressed(CFG.ps)
+    if  iskeypressed(0x20) and bhop then
+        if player then
+            keypress(0x20)
+            task.wait()
+        end
+    end
+    if EBpressed then
+        if player and not edging then
+            ebTxt.Visible = true
+            edging = true
+            local dir = hrp.AssemblyLinearVelocity
+             for i=1,5 do
+                 wait()
+                    hrp.AssemblyLinearVelocity = Vector3.new(dir.X * 1.25, dir.Y * 0, dir.Z * 1.3) - Vector3.new(0,18,0)
+                end
+                wait()
+                hrp.AssemblyLinearVelocity = Vector3.new(hrp.AssemblyLinearVelocity.X * 1.8, hrp.AssemblyLinearVelocity.Y * 1, hrp.AssemblyLinearVelocity.Z * 2)
+                spawn(function()
+                    wait(0.1)
+                    edging = false
+                    ebTxt.Visible = false
+                end)
+        end
+    end
+    if JBpressed then
+        if player and not jbing then
+            JBTxt.Visible = true
+            jbing = true
+    --find a way to do jump bug--
+        end
+	else
+        jbing = false
+        JBTxt.Visible = false
+    end
+    if Pspressed then
+        if player and not psing then
+            local vel = hrp.AssemblyLinearVelocity
+            local absX = math.abs(vel.X)
+            local absZ = math.abs(vel.Z)
+            psing = true
+            PsTxt.Visible = true
+            if absX < absZ then
+                for i=1,50 do
+                    hrp.AssemblyLinearVelocity = Vector3.new(0,0,vel.Z*1.5)
+                    task.wait()
+                end
+            elseif absX > absZ then
+                for i=1,50 do
+                    hrp.AssemblyLinearVelocity = Vector3.new(vel.X*1.5,0,0)
+                    task.wait()
+                end
+            end
+            wait()
+            hrp.AssemblyLinearVelocity = Vector3.new(hrp.AssemblyLinearVelocity.X * 1, hrp.AssemblyLinearVelocity.Y * 1, hrp.AssemblyLinearVelocity.Z * 2)
+        end
+    else
+        psing = false
+        PsTxt.Visible = false
+        hrp.AssemblyLinearVelocity = Vector3.new(hrp.AssemblyLinearVelocity.X * 1, hrp.AssemblyLinearVelocity.Y * 1, hrp.AssemblyLinearVelocity.Z * 1)
+        --pixel surf!--
+        end
+    velocity()
+   wait(0.0001)
+end
