@@ -1,3 +1,9 @@
+--BHOP(gaining speed) is not possible until i find a work around just use velocity--
+--havent done jb yet--
+local CFG = {
+    EB = 0xA0; --left shift
+    ps = 0x05; --mb4
+}
 local edging = false
 local jbing = false
 local psing = false
@@ -21,12 +27,6 @@ ebTxt.Position = Vector2.new(960, 750)
 ebTxt.Text = "EB"
 ebTxt.Color = white
 ebTxt.Visible = false
-
-local JBTxt = Drawing.new("Text")
-JBTxt.Position = Vector2.new(945, 750)
-JBTxt.Text = "JB"
-JBTxt.Color = white
-JBTxt.Visible = false
 
 local PsTxt = Drawing.new("Text")
 PsTxt.Position = Vector2.new(980, 750)
@@ -56,7 +56,6 @@ elseif totalVel < 1 then
 end
 while true do
     local EBpressed = iskeypressed(CFG.EB)
-    local JBpressed = iskeypressed(CFG.JB)
     local Pspressed = iskeypressed(CFG.ps)
     if  iskeypressed(0x20) and bhop then
         if player then
@@ -81,16 +80,6 @@ while true do
                     ebTxt.Visible = false
                 end)
         end
-    end
-    if JBpressed then
-        if player and not jbing then
-            JBTxt.Visible = true
-            jbing = true
-    --find a way to do jump bug--
-        end
-	else
-        jbing = false
-        JBTxt.Visible = false
     end
     if Pspressed then
         if player and not psing then
