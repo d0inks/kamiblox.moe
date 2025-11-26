@@ -71,7 +71,6 @@ end
 myGui:Destroy()
 
 ]]
-local UILib = loadstring(game:HttpGet(""))
 
 UILib = {}
 UILib.__index = UILib
@@ -1771,3 +1770,4 @@ end
 
 return UILib
 -- x11 lib end
+
