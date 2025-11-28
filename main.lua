@@ -1,6 +1,4 @@
---https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes--
 --MOVEMENT LUA FOR MATCHA EXTERNAL ROBLOX--
---BHOP is not done yet just use velocity--
 --jumpbug will not negate fall damage.--
 local CFG = {
     --helps for offcentered ui(NOT ACCURATE)--
@@ -17,7 +15,7 @@ local CFG = {
     rainbow = true; --rainbow watermark if false will use color below
     cwatermark = Color3.fromRGB(255, 255, 255); --custom watermark color in RGB
     name = "yourname"; --put whatever name u want under idk characters
-    jumpbugpower = 28; --jumpbug power default is 28 anything above is good and keep below 40
+    jumpbugpower = 30; --jumpbug power default is 30 anything above is good
 
 }
 local function Rel(xPercent, yPercent)
@@ -27,17 +25,18 @@ end
 --To opensky for their create function i took from(their arsenal skin changer project)
 --To chatgpt for help lol
 local edging = false
-local jbing = false
 local psing = false
-local bhop = true
+local bhop = false
 local playerS = game:GetService("Players")
 local player = playerS.LocalPlayer or game:GetService("Players").LocalPlayer
-local white = Color3.fromRGB(255, 255, 255) --white
-local green = Color3.fromRGB(0, 255, 0)--green
-local orange = Color3.fromRGB(250, 137, 0) --orange
+local white = Color3.fromRGB(255, 255, 255)
+local green = Color3.fromRGB(0, 255, 0)
+local orange = Color3.fromRGB(250, 137, 0)
+local red = Color3.fromRGB(255, 0, 0)
 local grey = Color3.fromRGB(32, 32, 32)
 local UIObjects = {}
-local function Create(type, props) --lowk pasted this dont tell anyone but it was soo useful see how cleaner my code is
+local function Create(type, props)
+    --lowk pasted this dont tell anyone but it was soo useful see how cleaner my code is
     local obj = Drawing.new(type)
     for k, v in pairs(props) do
         obj[k] = v
@@ -63,53 +62,56 @@ elseif CFG.topright == true then
 end
 --end of watermark
 local velo = Create("Text", { Visible = CFG.velocityind, Color = white, Outline = false })
-local ebTxt = Create("Text", { Position = Vector2.new(960, 750), Text = "EB", Color = white, Visible = false, Outline = false })
-local JBTxt = Create("Text", { Position = Vector2.new(945, 750), Text = "JB", Color = white, Visible = false, Outline = false })
-local PsTxt = Create("Text", { Position = Vector2.new(980, 750), Text = "PS", Color = white, Visible = false, Outline = false })
+local ebTxt = Create("Text", { Position = Rel(962 / 1920, 750 / 1080), Text = "EB", Color = white, Visible = false, Outline = false })
+local JBTxt = Create("Text", { Position = Rel(945 / 1920, 750 / 1080), Text = "JB", Color = white, Visible = false, Outline = false })
+local PsTxt = Create("Text", { Position = Rel(980 / 1920, 750 / 1080), Text = "PS", Color = white, Visible = false, Outline = false })
 print("moon.lua by doink :)")
 print("discord server -- https://discord.gg/BxAWmtP7cp")
 print("msg me if any bug occurs")
 --loop--
-
 local hrp = nil
 local lastCharacter = nil
+local Humanoid = nil
 local function UpdateCharacter()
     local char = player.Character
     if char ~= lastCharacter then
         lastCharacter = char
         if char then
             hrp = char:FindFirstChild("HumanoidRootPart")
+            Humanoid = char:FindFirstChild("Humanoid")
         end
     end
     if char and not hrp then
         hrp = char:FindFirstChild("HumanoidRootPart")
+        Humanoid = char:FindFirstChild("Humanoid")
     end
 end
 local pre = 0
 local h = 0
 local t = 0
 while true do
-    UpdateCharacter()
-    if not hrp then
-        task.wait(.5)
-    else
-        local EBpressed = iskeypressed(CFG.EB)
-        local JBpressed = iskeypressed(CFG.JB)
-        local Pspressed = iskeypressed(CFG.ps)
-        if CFG.rainbow == true then
-            h = (h + 0.005) % 1
-            rtxt.Color = Color3.fromHSV(h, 1, 1)
-            task.wait()
+    if isrbxactive() then
+        UpdateCharacter()
+        if not hrp then
+            task.wait(.5)
         else
-            rtxt.Color = CFG.cwatermark
-        end
-        t = (t - 0.005) % 1 --uses same logic from h bc im lazy asf
-        outbox.Color = Color3.fromHSV(1, 0, t)
-        task.wait()
-        if EBpressed then
-            if player and not edging then
-                local dir = hrp.AssemblyLinearVelocity
-                if math.abs(dir.X) > 1 and math.abs(dir.Y) > 1 or math.abs(dir.Z) > 1 and math.abs(dir.Y) > 1 then
+            local InAir = memory_read("int", Humanoid.Address + 0x190) == 1792
+            local EBpressed = iskeypressed(CFG.EB)
+            local JBpressed = iskeypressed(CFG.JB)
+            local Pspressed = iskeypressed(CFG.ps)
+            if CFG.rainbow == true then
+                h = (h + 0.005) % 1
+                rtxt.Color = Color3.fromHSV(h, 1, 1)
+                task.wait()
+            else
+                rtxt.Color = CFG.cwatermark
+            end
+            t = (t - 0.005) % 1 --uses same logic from h bc im lazy asf
+            outbox.Color = Color3.fromHSV(1, 0, t)
+            task.wait()
+            if EBpressed then
+                if player and InAir and not edging then
+                    local dir = hrp.AssemblyLinearVelocity
                     ebTxt.Visible = true
                     edging = true
                     ebTxt.Color = green
@@ -126,81 +128,57 @@ while true do
                         ebTxt.Color = white
                     end)
                 end
+            else
+                edging = false
+                ebTxt.Visible = false
+                ebTxt.Color = white
             end
-        else
-            edging = false
-            ebTxt.Visible = false
-            ebTxt.Color = white
-        end
-        if JBpressed then
-            if player and not jbing then
-                local dir = hrp.AssemblyLinearVelocity
-                if math.abs(dir.X) > 1 or math.abs(dir.Z) > 1 then
-                    JBTxt.Visible = true
-                    jbing = true
-                    if dir.Y > 1 then
-                        hrp.AssemblyLinearVelocity = Vector3.new(dir.X * 1.5, dir.Y * -1.5, dir.Z * 1.5)
-                    else
-                        hrp.AssemblyLinearVelocity = Vector3.new(dir.X * 1.5, dir.Y * 2, dir.Z * 1.5)
-                    end
-                    wait(0.1)
+            if JBpressed then
+                JBTxt.Visible = true
+                if player and not InAir then
+                    local dir = hrp.AssemblyLinearVelocity
                     hrp.AssemblyLinearVelocity = Vector3.new(dir.X * 2, CFG.jumpbugpower, dir.Z * 2)
                     JBTxt.Color = green
                     wait(0.2)
                     JBTxt.Color = white
                 end
+            else
+                JBTxt.Color = white
+                JBTxt.Visible = false
             end
-        else
-            jbing = false
-            JBTxt.Color = white
-            JBTxt.Visible = false
-        end
-        if Pspressed then
-            if not psing then
-                psing = true
-                PsTxt.Visible = true
+            if Pspressed and InAir then
+                if not psing then
+                    psing = true
+                    PsTxt.Visible = true
+                    PsTxt.Color = white
+                end
+                local dir = hrp.AssemblyLinearVelocity
+                task.wait()
                 PsTxt.Color = green
-            end
-            local dir = hrp.AssemblyLinearVelocity
-            if math.abs(dir.X) < math.abs(dir.Z) then
-                for i = 1, 20 do
-                    hrp.AssemblyLinearVelocity = Vector3.new(0, 0, dir.Z * 1.2)
-                    task.wait()
+                for i = 1, 40 do
+                    hrp.AssemblyLinearVelocity = Vector3.new(dir.X * 1.2, dir.Y * 0, dir.Z * 1.2)
                 end
-            elseif math.abs(dir.X) > math.abs(dir.Z) then
-                for i = 1, 20 do
-                    hrp.AssemblyLinearVelocity = Vector3.new(dir.X * 1.2, 0, 0)
-                    task.wait()
-                end
+            else
+                psing = false
+                PsTxt.Visible = false
+                PsTxt.Color = white
             end
-            wait()
-            hrp.AssemblyLinearVelocity = Vector3.new(dir.X * 1.1, hrp.AssemblyLinearVelocity.Y * 1, dir.Z * 1.1)
-        else
-            psing = false
-            PsTxt.Visible = false
-            PsTxt.Color = white
-        end
-        velo.Position = Rel(0.5, 0.6666666667)
-        local speed = hrp.AssemblyLinearVelocity
-        local bx = math.abs(speed.X ^ 2)
-        local bz = math.abs(speed.Z ^ 2)
-        local totalVel = math.sqrt(bx + bz) --calcs horizontal velocity
-        local toVel = string.format("%.2f", totalVel)
-        velo.Text = toVel
-        if totalVel > pre and totalVel > 1 and CFG.velocolors == true then
-            velo.Color = green
-        elseif totalVel < pre and totalVel > 1 and CFG.velocolors == true then
-            velo.Color = orange
-        elseif totalVel < 1 and CFG.velocolors == true then
-            velo.Color = white
-        end
-        wait(0.01)
-        pre = totalVel
-        if bhop then
-            if iskeypressed(0x20) then
-                keypress(0x20)
-                keyrelease(0x20)
+            velo.Position = Rel(0.5, 0.6666666667)
+            local speed = hrp.AssemblyLinearVelocity
+            local bx = math.abs(speed.X ^ 2)
+            local bz = math.abs(speed.Z ^ 2)
+            local totalVel = math.sqrt(bx + bz) --calcs horizontal velocity
+            local toVel = string.format("%.2f", totalVel)
+            velo.Text = toVel
+            if totalVel > pre and totalVel > 1 and CFG.velocolors == true then
+                velo.Color = green
+            elseif totalVel < pre and totalVel > 1 and CFG.velocolors == true then
+                velo.Color = orange
+            elseif totalVel < 1 and CFG.velocolors == true then
+                velo.Color = white
             end
+            wait(0.001)
+            pre = totalVel
         end
     end
 end
