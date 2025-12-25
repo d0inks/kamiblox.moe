@@ -1,6 +1,6 @@
 
 
-UILib = {}
+local UILib = {}
 UILib.__index = UILib
 
 ESP_FONTSIZE = 7 -- works great with ProggyClean
